@@ -1,0 +1,8 @@
+<div horizontal layout>
+	<div flex class="align-center" ng-repeat="n in range(startDay, endDay)">
+		{{moment().dayOfYear(n).format('M/DD')}}
+		<div class="align-center booking-slot" ng-class="{'color-success': slot}" ng-repeat="(index, slot) in schedule[$index] track by $index">
+			{{hourToMinutes(index).format('h:mm A')}}
+		</div>
+	</div>
+</div>

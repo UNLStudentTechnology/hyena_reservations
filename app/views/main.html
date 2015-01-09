@@ -1,0 +1,20 @@
+<unl-toolbar>
+  <unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
+  <span flex class="align-center">{{ groupId ? 'Reservations' : 'Groups' }}</span>
+</unl-toolbar>
+<!-- Group List -->
+<div class="content-container" ng-hide="groupId">
+  <unl-list-group>
+    <unl-list-item-label class="animate-fade-left" ng-repeat="group in currentUser.groups | orderBy:'title'" heading="{{group.title}}" link>
+      <a ng-href="/{{group.id}}"><paper-ripple fit></paper-ripple></a>
+    </unl-list-item-label>
+  </unl-list-group>
+</div>
+<!-- End Group List -->
+<div class="content-container" ng-show="groupId">
+  <unl-list-group>
+    <unl-list-item-label ng-repeat="asset in assets" heading="{{asset.title}}" link>
+      <a ng-click="go('/{{groupId}}/asset/{{asset.$id}}')"><paper-ripple fit></paper-ripple></a>
+    </unl-list-item-label>
+  </unl-list-group>
+</div>

@@ -1,0 +1,31 @@
+<unl-toolbar>
+  <unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
+  <a ng-click="go('/{{groupId}}/asset/{{asset.$id}}', 'animate-slide-left')" title="Back to Asset"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
+  <span flex class="align-center">{{ asset.title || 'Loading' }}</span>
+</unl-toolbar>
+<div class="content-container">
+	<form name="assetSettingsForm">
+		<unl-list-group>
+			<unl-list-item-label heading="Title">
+				<div class="tools">
+					<input type="text" ng-model="asset.title">
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-label heading="Slot Size" label="In Minutes">
+				<div class="tools">
+					<input type="number" ng-model="asset.slot_size">
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-label heading="Maximum Booking Length" label="In Minutes">
+				<div class="tools">
+					<input type="number" ng-model="asset.max_booking_length">
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-label heading="Openings Per Slot" label="The number of times this slot can be reserved">
+				<div class="tools">
+					<input type="number" ng-model="asset.units">
+				</div>
+			</unl-list-item-label>
+		</unl-list-group>
+	</form>
+</div>

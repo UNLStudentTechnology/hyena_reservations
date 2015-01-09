@@ -1,0 +1,31 @@
+<unl-toolbar>
+  	<unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
+	<a ng-click="go('/', 'animate-slide-left')" title="Back to Apps"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
+  	<span flex class="align-center">{{app.title || 'New App'}}</span>
+  	<a ng-href="{{app.url}}" ng-show="app.url" title="Open App" target="_blank"><unl-icon-button icon="launch"></unl-icon-button></a>
+</unl-toolbar>
+<div class="content-container">
+	<!-- App Settings -->
+	<form name="newAppForm" ng-submit="createApp()">
+		<unl-list-group>
+			<unl-list-item-header>General</unl-list-item-header>
+			<unl-list-item-label heading="Title">
+				<div class="tools">
+					<input required type="text" name="app-title" ng-model="app.title">
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-label heading="Description">
+				<div class="tools">
+					<input required type="text" name="app-description" ng-model="app.description">
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-label heading="URL" label="Full URL to your app's main page. Include http(s)://">
+				<div class="tools">
+					<input required type="text" name="app-url" ng-model="app.url" placeholder="http://">
+				</div>
+			</unl-list-item-label>
+		</unl-list-group>
+		<button type="submit" ng-disabled="newAppForm.$invalid">Create App</button>
+	</form>
+	<!-- End App Settings -->
+</div>
