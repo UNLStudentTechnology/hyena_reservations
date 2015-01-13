@@ -1,31 +1,31 @@
 <unl-toolbar>
   	<unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
-	<a ng-click="go('/', 'animate-slide-left')" title="Back to Apps"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
-  	<span flex class="align-center">{{app.title || 'New App'}}</span>
-  	<a ng-href="{{app.url}}" ng-show="app.url" title="Open App" target="_blank"><unl-icon-button icon="launch"></unl-icon-button></a>
+	<a ng-click="go('/{{groupId}}', 'animate-slide-left')" title="Back to Assets"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
+  	<span flex class="align-center">{{asset.title || 'New Asset'}}</span>
+  	<a ng-href="{{asset.url}}" ng-show="asset.url" title="Open asset" target="_blank"><unl-icon-button icon="launch"></unl-icon-button></a>
 </unl-toolbar>
 <div class="content-container">
-	<!-- App Settings -->
+	<!-- Asset Settings -->
 	<form name="newAppForm" ng-submit="createApp()">
 		<unl-list-group>
 			<unl-list-item-header>General</unl-list-item-header>
 			<unl-list-item-label heading="Title">
 				<div class="tools">
-					<input required type="text" name="app-title" ng-model="app.title">
+					<input required type="text" name="asset-title" ng-model="asset.title">
 				</div>
 			</unl-list-item-label>
 			<unl-list-item-label heading="Description">
 				<div class="tools">
-					<input required type="text" name="app-description" ng-model="app.description">
+					<input required type="text" name="asset-description" ng-model="asset.description">
 				</div>
 			</unl-list-item-label>
-			<unl-list-item-label heading="URL" label="Full URL to your app's main page. Include http(s)://">
+			<unl-list-item-label heading="URL" label="Full URL to your asset's main page. Include http(s)://">
 				<div class="tools">
-					<input required type="text" name="app-url" ng-model="app.url" placeholder="http://">
+					<input required type="text" name="asset-url" ng-model="asset.url" placeholder="http://">
 				</div>
 			</unl-list-item-label>
 		</unl-list-group>
-		<button type="submit" ng-disabled="newAppForm.$invalid">Create App</button>
+		<button type="submit" ng-disabled="newAppForm.$invalid">Create Asset</button>
 	</form>
-	<!-- End App Settings -->
+	<!-- End Asset Settings -->
 </div>

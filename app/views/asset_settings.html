@@ -1,29 +1,46 @@
 <unl-toolbar>
   <unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
-  <a ng-click="go('/{{groupId}}/asset/{{asset.$id}}', 'animate-slide-left')" title="Back to Asset"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
+  <a ng-click="go('/{{groupId}}/asset/{{assetId}}', 'animate-slide-left')" title="Back to Asset"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
   <span flex class="align-center">{{ asset.title || 'Loading' }}</span>
 </unl-toolbar>
 <div class="content-container">
 	<form name="assetSettingsForm">
 		<unl-list-group>
+			<unl-list-item-header>General</unl-list-item-header>
 			<unl-list-item-label heading="Title">
 				<div class="tools">
 					<input type="text" ng-model="asset.title">
 				</div>
 			</unl-list-item-label>
-			<unl-list-item-label heading="Slot Size" label="In Minutes">
+			<unl-list-item-label heading="Time Slot Size" label="In Minutes">
 				<div class="tools">
-					<input type="number" ng-model="asset.slot_size">
+					<input type="number" step="15" min="15" ng-model="asset.slot_size">
 				</div>
 			</unl-list-item-label>
 			<unl-list-item-label heading="Maximum Booking Length" label="In Minutes">
 				<div class="tools">
-					<input type="number" ng-model="asset.max_booking_length">
+					<input type="number" step="15" min="{{asset.slot_size}}" ng-model="asset.max_booking_length">
 				</div>
 			</unl-list-item-label>
-			<unl-list-item-label heading="Openings Per Slot" label="The number of times this slot can be reserved">
+			<unl-list-item-label heading="Openings Per Time Slot" label="The number of times a slot can be reserved">
 				<div class="tools">
 					<input type="number" ng-model="asset.units">
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-header>Display</unl-list-item-header>
+			<unl-list-item-label heading="Hide Weekends">
+				<div class="tools">
+					<unl-toggle-button id="hide-weekends" ng-checked="asset.hide_weekend"></unl-toggle-button>
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-label heading="Hide Time Slots Before">
+				<div class="tools">
+					<input type="text" ui-mask="99:99 AA" ng-model="asset.hide_hour_before">
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-label heading="Hide Time Slots After">
+				<div class="tools">
+					<input type="text" ui-mask="99:99 AA" ng-model="asset.hide_hour_after">
 				</div>
 			</unl-list-item-label>
 		</unl-list-group>

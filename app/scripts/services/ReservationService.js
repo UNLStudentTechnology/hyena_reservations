@@ -60,6 +60,12 @@ angular.module('hyenaReservationsApp')
   					return $firebase(reservationsRef.child('bookings/'+assetId+'/'+year).startAt(null, startDay.toString()).limit(endDay));
   				}
   			}
+  		},
+  		book: function setBooking(assetId, dayOfYear, hour, custom_year) {
+  			var year = custom_year || moment().get('year');
+  			var bookingRef = $firebase(reservationsRef.child("bookings/"+assetId+'/'+year+'/'+dayOfYear));
+
+  			return bookingRef.$set(hour, true);
   		}
   	};
 

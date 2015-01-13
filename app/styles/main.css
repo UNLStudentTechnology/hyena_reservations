@@ -1,1 +1,1 @@
-.booking-slot{background:#e7e8ea;margin:5px;padding:5px;font-size:80%}
+.booking-slot{background:#e7e8ea;margin:5px}.booking-slot input{display:none}.booking-slot input:checked~label,.booking-slot input[disabled]~label{cursor:not-allowed}.booking-slot label{cursor:pointer;display:block;font-size:80%;padding:5px}

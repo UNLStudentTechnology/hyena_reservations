@@ -13,7 +13,7 @@ angular.module('hyenaReservationsApp')
   	var groupId = $routeParams.groupId;
   	$scope.groupId = $rootScope.currentGroupId = groupId;
   	//Get asset id
-  	var assetId = $routeParams.assetId;
+  	var assetId = $scope.assetId = $routeParams.assetId;
 
   	//Get Asset
   	var asset = ReservationService.asset(groupId, assetId).$asObject();

@@ -8,11 +8,16 @@
  * # bookingCalendar
  */
 angular.module('hyenaReservationsApp')
-  .directive('bookingCalendar', function () {
+  .directive('bookingCalendar', function (ReservationService) {
     return {
       templateUrl: 'views/partials/booking-calendar.html',
       restrict: 'E',
-      scope: true,
+      scope: {
+      	asset: '=',
+      	schedule: '=',
+      	bookings: '=',
+      	addBooking: '&onChange'
+      },
       replace: false,
       link: function postLink(scope, element, attrs) {
       	scope.startDay = moment().dayOfYear();
@@ -20,8 +25,18 @@ angular.module('hyenaReservationsApp')
       	scope.endDay = scope.startDay + scope.numDays;
       	scope.moment = moment;
 
-       	console.log('Current Date:', moment().format());
+      	/**
+      	 * Pass through function for custom booking callback
+      	 * @param  int day  Day of year
+      	 * @param  int hour Hour of day
+      	 */
+      	scope.doBooking = function(day, hour) {
+      		scope.addBooking()(scope.asset.$id, day, hour);
+      	};
 
+       	/**
+       	 * Provides a for loop for ng-repeat
+       	 */
        	scope.range = function(min, max, step){
 			step = step || 1;
 			var input = [];
@@ -29,6 +44,11 @@ angular.module('hyenaReservationsApp')
 			return input;
 		};
 
+		/**
+		 * Converts the hour value stored on Firebase to minutes
+		 * @param  int value Hour (0 to 23)
+		 * @return int       [description]
+		 */
 		scope.hourToMinutes = function(value) {
 			value = value*60;
 			return moment().startOf('day').minutes(value);

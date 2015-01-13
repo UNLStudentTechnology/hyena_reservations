@@ -19,6 +19,7 @@ angular
     'ngStorage',
     'firebase',
     'angularMoment',
+    'ui.mask'
   ])
   .config(function ($routeProvider, $locationProvider) {
     $routeProvider
@@ -30,13 +31,17 @@ angular
         templateUrl: 'views/main.html',
         controller: 'DashboardCtrl'
       })
-      .when('/:groupId/asset/:assetId', {
-        templateUrl: 'views/asset.html',
-        controller: 'AssetCtrl'
+      .when('/:groupId/asset/new', {
+        templateUrl: 'views/new.html',
+        controller: 'NewCtrl'
       })
       .when('/:groupId/asset/:assetId/settings', {
         templateUrl: 'views/asset_settings.html',
         controller: 'AssetSettingsCtrl'
+      })
+      .when('/:groupId/asset/:assetId', {
+        templateUrl: 'views/asset.html',
+        controller: 'AssetCtrl'
       })
       .otherwise({
         redirectTo: '/'

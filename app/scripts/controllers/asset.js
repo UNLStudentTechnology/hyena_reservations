@@ -13,7 +13,7 @@ angular.module('hyenaReservationsApp')
   	var groupId = $routeParams.groupId;
   	$scope.groupId = $rootScope.currentGroupId = groupId;
   	//Get asset id
-  	var assetId = $routeParams.assetId;
+  	var assetId = $scope.assetId = $routeParams.assetId;
 
   	//Get Asset
   	var asset = ReservationService.asset(groupId, assetId).$asObject();
@@ -22,10 +22,17 @@ angular.module('hyenaReservationsApp')
   	//Get Schedule
   	var schedule = ReservationService.schedule(assetId).$asObject();
   	schedule.$bindTo($scope, 'schedule');
-  	console.log('Schedule', schedule);
 
   	//Get Bookings
   	var bookings = ReservationService.bookings(assetId).$asObject();
   	bookings.$bindTo($scope, 'bookings');
-  	console.log('Bookings', bookings);
+
+  	$scope.addBooking = function(assetId, day, hour) {
+   		console.log('Adding Booking', day, hour, assetId);
+   		var bookingResponse = ReservationService.book(assetId, day, hour);
+   		bookingResponse.then(function(response) {
+   			Notification.show('That time has been booked successfully!', 'success');
+   		});
+   	};
+
   });

@@ -34,12 +34,25 @@ Website URL: http://unl-hyena.herokuapp.com
 
 /* Booking Calendar */
 booking-calendar {
-
 }
 
 .booking-slot {
 	background: @subtle;
 	margin: 5px;
-	padding: 5px;
-	font-size: 80%;
+
+	& input {
+		display: none;
+	}
+
+	& input:checked ~ label,
+	& input[disabled] ~ label {
+		cursor: not-allowed;
+	}
+
+	& label {
+		cursor: pointer;
+		display: block;
+		font-size: 80%;
+		padding: 5px;
+	}
 }

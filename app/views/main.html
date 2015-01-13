@@ -1,6 +1,7 @@
 <unl-toolbar>
   <unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
-  <span flex class="align-center">{{ groupId ? 'Reservations' : 'Groups' }}</span>
+  <span flex class="align-center">{{ groupId ? 'Assets' : 'Groups' }}</span>
+  <a ng-click="go('/{{groupId}}/asset/new')" ng-show="groupId" title="Create New Asset"><unl-icon-button icon="add"></unl-icon-button></a>
 </unl-toolbar>
 <!-- Group List -->
 <div class="content-container" ng-hide="groupId">
