@@ -19,20 +19,32 @@ angular.module('hyenaReservationsApp')
   		asset: function getAsset(groupId, assetId) {
   			return $firebase(reservationsRef.child('groups/'+groupId+"/assets/"+assetId));
   		},
-  		schedule: function getSchedule(assetId) {
+  		schedule: function getSchedule(groupId, assetId) {
+  			var asset = ReservationService.asset(groupId, assetId);
   			var scheduleRef = $firebase(reservationsRef.child("schedules/"+assetId));
-  			ReservationService.cleanSchedule(scheduleRef);
+  			asset.$asObject().$loaded().then(function(data) {
+  				ReservationService.cleanSchedule(scheduleRef, data.slot_size);
+  			});
+
   			return scheduleRef;
   		},
-  		cleanSchedule: function cleanSchedule(schedule) {
+  		cleanSchedule: function cleanSchedule(schedule, slotSize, wipeExisting) {
+  			slotSize = slotSize || 60; //Defaults to one hour - In minutes
+  			wipeExisting = wipeExisting || false;
   			var scheduleObject = schedule.$asObject();
+  			var minutesInDay = 1440;
+  			var numHours = minutesInDay/slotSize;
+
   			scheduleObject.$loaded().then(function(data) {
-	  			for (var i = 0; i < 7; i++) {
-	  				if(angular.isUndefined(data[i]))
+	  			for (var i = 0; i < 7; i++) { //Loop through days
+	  				if(wipeExisting || angular.isUndefined(data[i]))
 	  				{
-	  					console.log('Cleaning index:', i);
+	  					// console.log('Cleaning index:', i);
 	  					var newObj = {};
-	  					for (var j = 0; j < 24; j++) {
+	  					schedule.$set(i, newObj); //Reset Day's slots
+
+	  					var hourIndex = 0;
+	  					for (var j = 0; j < numHours; j++) { //Loop through hours
 	  						newObj[j] = false;
 	  					}
 
@@ -41,6 +53,10 @@ angular.module('hyenaReservationsApp')
 	  			}
   			});
   			return true;
+  		},
+  		changeSlotSize: function changeSlotSize(groupId, assetId, slotSize) {
+  			var scheduleRef = $firebase(reservationsRef.child("schedules/"+assetId));
+	  		return ReservationService.cleanSchedule(scheduleRef, slotSize, true);
   		},
   		bookings: function getBookings(assetId, unit, custom_year, custom_week, custom_day) {
   			var year = custom_year || moment().get('year');

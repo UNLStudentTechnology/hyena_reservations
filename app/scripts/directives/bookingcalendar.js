@@ -25,6 +25,13 @@ angular.module('hyenaReservationsApp')
       	scope.endDay = scope.startDay + scope.numDays;
       	scope.moment = moment;
 
+		scope.$watch('asset', function(newValue, oldValue) {
+			if(angular.isDefined(newValue)) {
+				scope.hide_before = moment(newValue.hide_hour_before, 'hh:mm a').hour();
+				scope.hide_after = moment(newValue.hide_hour_after, 'hh:mm a').hour();
+			}
+		});
+
       	/**
       	 * Pass through function for custom booking callback
       	 * @param  int day  Day of year
@@ -52,6 +59,10 @@ angular.module('hyenaReservationsApp')
 		scope.hourToMinutes = function(value) {
 			value = value*60;
 			return moment().startOf('day').minutes(value);
+		};
+
+		scope.convertKeyToNum = function(value) {
+			return (scope.asset.slot_size/60)*value;
 		};
       }
     };

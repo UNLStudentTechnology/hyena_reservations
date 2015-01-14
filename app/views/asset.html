@@ -4,9 +4,6 @@
   <span flex class="align-center">{{ asset.title || 'Loading' }}</span>
   <a ng-click="go('/{{groupId}}/asset/{{assetId}}/settings')" title="Settings"><unl-icon-button icon="settings"></unl-icon-button></a>
 </unl-toolbar>
-<!-- <div class="content-container">
-	<span>{{schedule[1][0]}}</span>
-</div> -->
 <div class="content-container">
 	<booking-calendar asset="asset" bookings="bookings" schedule="schedule" on-change="addBooking"></booking-calendar>
 </div>

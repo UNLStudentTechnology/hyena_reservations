@@ -36,6 +36,7 @@ angular.module('hyenaReservationsApp')
     }
     else if(AuthService.check() && AppFirebase.getAuthRef().$getAuth() !== null) //Already authenticated, attempt to get existing session
     {
+      console.log('Firebase Auth Status', AppFirebase.getAuthRef().$getAuth());
       $scope.appLoaded = true;
       AuthService.user('groups').then(function(user) {
         $scope.currentUser = user.data;

@@ -20,8 +20,9 @@ angular.module('hyenaReservationsApp')
   	asset.$bindTo($scope, 'asset');
 
   	//Get Schedule
-  	var schedule = ReservationService.schedule(assetId).$asObject();
+  	var schedule = ReservationService.schedule(groupId, assetId).$asObject();
   	schedule.$bindTo($scope, 'schedule');
+    console.log(schedule);
 
   	//Get Bookings
   	var bookings = ReservationService.bookings(assetId).$asObject();

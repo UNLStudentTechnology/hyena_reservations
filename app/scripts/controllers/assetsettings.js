@@ -18,4 +18,11 @@ angular.module('hyenaReservationsApp')
   	//Get Asset
   	var asset = ReservationService.asset(groupId, assetId).$asObject();
   	asset.$bindTo($scope, 'asset');
+
+    $scope.$watch('asset.slot_size', function(newValue, oldValue) {
+      if(angular.isDefined(oldValue))
+      {
+        ReservationService.changeSlotSize(groupId, assetId, newValue);
+      }
+    });
   });
