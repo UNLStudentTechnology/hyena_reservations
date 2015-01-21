@@ -1,4 +1,5 @@
 /* global moment */
+/* global math */
 'use strict';
 
 /**
@@ -14,13 +15,22 @@ angular.module('hyenaReservationsApp')
     
   	var ReservationService = {
   		assets: function getAssets(groupId, limit) {
-  			return $firebase(reservationsRef.child('groups/'+groupId+"/assets").limit(limit));
+  			limit = limit || 20;
+  			groupId = parseInt(groupId);
+  			var assetRef = reservationsRef.child('assets').orderByChild("group_id").equalTo(groupId).limitToFirst(limit);
+  			return $firebase(assetRef);
   		},
-  		asset: function getAsset(groupId, assetId) {
-  			return $firebase(reservationsRef.child('groups/'+groupId+"/assets/"+assetId));
+  		asset: function getAsset(assetId) {
+  			return $firebase(reservationsRef.child('/assets/'+assetId));
   		},
-  		schedule: function getSchedule(groupId, assetId) {
-  			var asset = ReservationService.asset(groupId, assetId);
+  		add: function addAsset(asset) {
+  			return $firebase(reservationsRef.child('/assets')).$push(asset);
+  		},
+  		remove: function removeAsset(assetId) {
+  			return $firebase(reservationsRef.child('/assets/'+assetId)).$remove();
+  		},
+  		schedule: function getSchedule(assetId) {
+  			var asset = ReservationService.asset(assetId);
   			var scheduleRef = $firebase(reservationsRef.child("schedules/"+assetId));
   			asset.$asObject().$loaded().then(function(data) {
   				ReservationService.cleanSchedule(scheduleRef, data.slot_size);
@@ -41,11 +51,11 @@ angular.module('hyenaReservationsApp')
 	  				{
 	  					// console.log('Cleaning index:', i);
 	  					var newObj = {};
-	  					schedule.$set(i, newObj); //Reset Day's slots
+	  					schedule.$remove(i); //Reset Day's slots
 
 	  					var hourIndex = 0;
 	  					for (var j = 0; j < numHours; j++) { //Loop through hours
-	  						newObj[j] = false;
+	  						newObj[j] = true;
 	  					}
 
 	  					schedule.$set(i, newObj);
@@ -73,7 +83,7 @@ angular.module('hyenaReservationsApp')
   				default: {
   					var startDay = day;
   					var endDay = day + 6;
-  					return $firebase(reservationsRef.child('bookings/'+assetId+'/'+year).startAt(null, startDay.toString()).limit(endDay));
+  					return $firebase(reservationsRef.child('bookings/'+assetId+'/'+year).startAt(null, startDay.toString()).limitToFirst(endDay));
   				}
   			}
   		},
@@ -82,6 +92,45 @@ angular.module('hyenaReservationsApp')
   			var bookingRef = $firebase(reservationsRef.child("bookings/"+assetId+'/'+year+'/'+dayOfYear));
 
   			return bookingRef.$set(hour, true);
+  		},
+  		compareAvailability: function compareAvailability(assets)
+  		{
+  			if(angular.isUndefined(assets))
+  				return false;
+
+  			//Debug
+  			console.log("Asset Array", assets);
+
+  			var assetRefs = [];
+  			for (var i = 0; i < assets.length; i++) {
+  				ReservationService.schedule(assets[i]).$asArray().$loaded(function(data) {
+  					console.log('Array Loaded', data);
+					var tempArray = [];
+
+						//Loop through arrays and convert bool to int
+	  				for (var k = 0; k < data.length; k++) {
+	  					for (var j = 0; j < data[k].length; j++) {
+	  						data[k][j] = data[k][j] ? 1 : 0;
+	  					}
+	  				}
+	  				//Push the modified array to array of assets
+	  				assetRefs.push(data);
+
+	  				console.log('tempArray', data);
+	  				if((assets.length) === i)
+	  					doCompare();
+  				});
+  			}
+  			//lls_402, -JfeEYTIi-8PSHVXOUgx
+  			return function doCompare() {
+  				//Do array math and return final array
+				console.log('End');
+				console.log('Final Arrays', assetRefs);
+	  			if(angular.isDefined(assetRefs)) {
+	  				var combinedArray = math.add(assetRefs[0], assetRefs[1]);
+	  				return combinedArray;
+	  			}
+  			}
   		}
   	};
 

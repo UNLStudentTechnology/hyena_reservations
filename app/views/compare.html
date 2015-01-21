@@ -1,0 +1,9 @@
+<unl-toolbar>
+  	<unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
+	<a ng-click="go('/', 'animate-slide-left')" title="Back to Assets"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
+  	<span flex class="align-center">Compare Assets</span>
+</unl-toolbar>
+<div class="content-container">
+	<input type="text" ng-model="assets" ng-blur="compareAssets()">
+	<p>{{ compareOutput }}</p>
+</div>

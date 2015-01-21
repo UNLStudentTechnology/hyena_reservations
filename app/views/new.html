@@ -6,7 +6,7 @@
 </unl-toolbar>
 <div class="content-container">
 	<!-- Asset Settings -->
-	<form name="newAppForm" ng-submit="createApp()">
+	<form name="newAppForm" ng-submit="createAsset()">
 		<unl-list-group>
 			<unl-list-item-header>General</unl-list-item-header>
 			<unl-list-item-label heading="Title">
@@ -14,14 +14,19 @@
 					<input required type="text" name="asset-title" ng-model="asset.title">
 				</div>
 			</unl-list-item-label>
-			<unl-list-item-label heading="Description">
+			<unl-list-item-label heading="Time Slot Size" label="In Minutes">
 				<div class="tools">
-					<input required type="text" name="asset-description" ng-model="asset.description">
+					<input type="number" step="15" min="15" ng-model="asset.slot_size">
 				</div>
 			</unl-list-item-label>
-			<unl-list-item-label heading="URL" label="Full URL to your asset's main page. Include http(s)://">
+			<unl-list-item-label heading="Maximum Booking Length" label="In Minutes">
 				<div class="tools">
-					<input required type="text" name="asset-url" ng-model="asset.url" placeholder="http://">
+					<input type="number" step="15" min="{{asset.slot_size}}" ng-model="asset.max_booking_length">
+				</div>
+			</unl-list-item-label>
+			<unl-list-item-label heading="Openings Per Time Slot" label="The number of times a slot can be reserved">
+				<div class="tools">
+					<input type="number" ng-model="asset.units">
 				</div>
 			</unl-list-item-label>
 		</unl-list-group>

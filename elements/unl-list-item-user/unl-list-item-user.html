@@ -41,16 +41,16 @@ Created by Hayden Gascoigne
         user: {},
 
         userChanged: function() {
-          try{
             if(typeof this.user !== 'undefined' && this.user !== null)
             {
-              this.user = JSON.parse(this.user);
+              try{
+                this.user = JSON.parse(this.user);
+              }
+              catch(error)
+              {
+                //console.warn('unl-list-item-user error:', 'Not Valid JSON');
+              }
             }
-          }
-          catch(error)
-          {
-            console.warn('unl-list-item-user error:', 'Not Valid JSON');
-          }
         }
 
       });

@@ -27,6 +27,10 @@ angular
         templateUrl: 'views/main.html',
         controller: 'DashboardCtrl'
       })
+      .when('/compare', {
+        templateUrl: 'views/compare.html',
+        controller: 'CompareCtrl'
+      })
       .when('/:groupId', {
         templateUrl: 'views/main.html',
         controller: 'DashboardCtrl'

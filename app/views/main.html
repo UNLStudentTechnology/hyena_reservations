@@ -14,7 +14,7 @@
 <!-- End Group List -->
 <div class="content-container" ng-show="groupId">
   <unl-list-group>
-    <unl-list-item-label ng-repeat="asset in assets" heading="{{asset.title}}" link>
+    <unl-list-item-label ng-repeat="asset in assets | orderBy:'title'" heading="{{asset.title}}" link>
       <a ng-click="go('/{{groupId}}/asset/{{asset.$id}}')"><paper-ripple fit></paper-ripple></a>
     </unl-list-item-label>
   </unl-list-group>

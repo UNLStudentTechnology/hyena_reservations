@@ -79,6 +79,12 @@
                     <a ng-click="go('/{{group.id}}', 'animate-slide-left'); closeMainDrawer()"><paper-ripple fit></paper-ripple></a>
                 </unl-list-item-label>
                 <!-- End list groups -->
+                <!-- List debug -->
+                <unl-list-item-header>Debug</unl-list-item-header>
+                <unl-list-item-label heading="Compare Schedules" link>
+                    <a ng-click="go('/compare'); closeMainDrawer()"><paper-ripple fit></paper-ripple></a>
+                </unl-list-item-label>
+                <!-- End list debug -->
                 </div>
             </unl-list-group>
         </div>
@@ -126,6 +132,7 @@
     <script src="bower_components/angular-messages/angular-messages.js"></script>
     <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
     <script src="bower_components/angular-ui-utils/mask.js"></script>
+    <script src="bower_components/mathjs/dist/math.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -148,6 +155,7 @@
         <script src="scripts/filters/toarray.js"></script>
         <script src="scripts/directives/user.js"></script>
         <script src="scripts/directives/bookingcalendar.js"></script>
+        <script src="scripts/controllers/compare.js"></script>
         <!-- endbuild -->
 </body>
 </html>

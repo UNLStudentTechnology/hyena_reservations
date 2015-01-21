@@ -16,13 +16,27 @@ angular.module('hyenaReservationsApp')
   	var assetId = $scope.assetId = $routeParams.assetId;
 
   	//Get Asset
-  	var asset = ReservationService.asset(groupId, assetId).$asObject();
+  	var asset = ReservationService.asset(assetId).$asObject();
   	asset.$bindTo($scope, 'asset');
 
     $scope.$watch('asset.slot_size', function(newValue, oldValue) {
       if(angular.isDefined(oldValue))
       {
-        ReservationService.changeSlotSize(groupId, assetId, newValue);
+        ReservationService.changeSlotSize(assetId, newValue);
       }
     });
+
+    /**
+     * Removes the asset from the database
+     */
+    $scope.removeAsset = function() {
+      ReservationService.remove(assetId).then(function(response) {
+        //Navigate back to the asset listing
+        $scope.go('/'+groupId, 'animate-slide-left');
+        Notification.show('Your asset has been successfully removed.', 'success');
+      }, function(error) {
+        console.log('Error removing asset', error);
+        Notification.show('Sorry! There was an error removing your asset.', 'error');
+      });
+    };
   });

@@ -27,8 +27,8 @@ angular.module('hyenaReservationsApp')
 
 		scope.$watch('asset', function(newValue, oldValue) {
 			if(angular.isDefined(newValue)) {
-				scope.hide_before = moment(newValue.hide_hour_before, 'hh:mm a').hour();
-				scope.hide_after = moment(newValue.hide_hour_after, 'hh:mm a').hour();
+				scope.hide_before = moment(newValue.hide_hour_before, 'hh:mm a').hour() || 0;
+				scope.hide_after = moment(newValue.hide_hour_after, 'hh:mm a').hour() || 23;
 			}
 		});
 
@@ -59,6 +59,10 @@ angular.module('hyenaReservationsApp')
 		scope.hourToMinutes = function(value) {
 			value = value*60;
 			return moment().startOf('day').minutes(value);
+		};
+
+		scope.minutesToHour = function(value) {
+			return value/60;
 		};
 
 		scope.convertKeyToNum = function(value) {
