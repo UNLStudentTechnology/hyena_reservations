@@ -6,10 +6,6 @@
 
 // Part of an effort to create a modular, lightweight CSS framework.
 
-// Type in the Chipped Beef framework is built to maintain a vertical rhythm. 
-// Of course, it's very hard to maintain that rhythm in complex websites, but the
-// default type settings should keep standard type in rhythm.
-
 /* Base Typography */
 // @import "font-gotham";
 // @import "font-wdn";
@@ -66,6 +62,10 @@ body, .body-font {
     line-height: 25px;
     text-rendering: optimizeLegibility;
     -webkit-text-rendering: optimizeLegibility;
+}
+
+body, caption, th, td, input, textarea, select, option, legend, fieldset, h1, h2, h3, h4, h5, h6 {
+  font-size-adjust: 0.5;
 }
 
 body {

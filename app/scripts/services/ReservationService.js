@@ -10,26 +10,70 @@
  * Service in the hyenaReservationsApp.
  */
 angular.module('hyenaReservationsApp')
-  .service('ReservationService', function ($firebase, AppFirebase) {
+  .service('ReservationService', function ($firebase, AppFirebase, $q) {
   	var reservationsRef = AppFirebase.getRef();
+    var minutesInDay = 1440;
     
   	var ReservationService = {
-  		assets: function getAssets(groupId, limit) {
-  			limit = limit || 20;
-  			groupId = parseInt(groupId);
-  			var assetRef = reservationsRef.child('assets').orderByChild("group_id").equalTo(groupId).limitToFirst(limit);
-  			return $firebase(assetRef);
-  		},
+      /**
+       * Returns a single asset from Firebase
+       * @param  string assetId
+       * @return firebaseRef
+       */
   		asset: function getAsset(assetId) {
+  			assetId = assetId.trim();
   			return $firebase(reservationsRef.child('/assets/'+assetId));
   		},
-  		add: function addAsset(asset) {
-  			return $firebase(reservationsRef.child('/assets')).$push(asset);
+      /**
+       * Returns an array of assets
+       * @param  array assets Array of asset IDs.
+       * @return promise
+       */
+      assets: function getAssets(assets) {
+        if(angular.isUndefined(assets) || !Array.isArray(assets) || (assets.length === 1 && assets[0] === ""))
+          return $q.reject('Malformed data');
+
+        var promises = [];
+        //Loop through requested assets
+        for (var i = 0; i < assets.length; i++) {
+          if(assets[i] !== "")
+            promises.push(ReservationService.schedule(assets[i]).$asArray().$loaded());
+        }
+        return $q.all(promises);
+      },
+      /**
+       * Returns assets for a group
+       * @param  int groupId
+       * @param  int limit   
+       * @return firebaseRef
+       */
+      groupAssets: function getGroupAssets(groupId, limit) {
+        limit = limit || 20;
+        groupId = parseInt(groupId);
+        var assetRef = reservationsRef.child('assets').orderByChild("group_id").equalTo(groupId).limitToFirst(limit);
+        return $firebase(assetRef);
+      },
+      /**
+       * Adds a new asset
+       * @param object  asset     Asset object
+       * @param int     groupId   Group ID
+       */
+  		add: function addAsset(asset, groupId) {
+  			return $firebase(reservationsRef.child('/assets')).$push(asset).then(function(response) {
+          //Add a reference to the group
+          $firebase(reservationsRef.child('/groups/'+groupId+'/assets')).$set(response.key(), true);
+          return response;
+        });
   		},
   		remove: function removeAsset(assetId) {
+  			assetId = assetId.trim();
   			return $firebase(reservationsRef.child('/assets/'+assetId)).$remove();
   		},
   		schedule: function getSchedule(assetId) {
+  			assetId = assetId.trim();
+  			if(assetId === "")
+  				return false;
+
   			var asset = ReservationService.asset(assetId);
   			var scheduleRef = $firebase(reservationsRef.child("schedules/"+assetId));
   			asset.$asObject().$loaded().then(function(data) {
@@ -38,13 +82,20 @@ angular.module('hyenaReservationsApp')
 
   			return scheduleRef;
   		},
+      /**
+       * Internal function that maintains proper state of schedules
+       * @param  firebase schedule     Firebase Reference to asset's schedule
+       * @param  int      slotSize     Asset slot size
+       * @param  bool     wipeExisting  Forces rebuild of asset's schedule
+       * @return bool
+       */
   		cleanSchedule: function cleanSchedule(schedule, slotSize, wipeExisting) {
   			slotSize = slotSize || 60; //Defaults to one hour - In minutes
   			wipeExisting = wipeExisting || false;
   			var scheduleObject = schedule.$asObject();
-  			var minutesInDay = 1440;
   			var numHours = minutesInDay/slotSize;
 
+        //Check integrity and build schedule
   			scheduleObject.$loaded().then(function(data) {
 	  			for (var i = 0; i < 7; i++) { //Loop through days
 	  				if(wipeExisting || angular.isUndefined(data[i]))
@@ -64,11 +115,19 @@ angular.module('hyenaReservationsApp')
   			});
   			return true;
   		},
-  		changeSlotSize: function changeSlotSize(groupId, assetId, slotSize) {
+      /**
+       * Updates an asset's schedule to reflect its new slot size
+       * @param  {[type]} assetId  [description]
+       * @param  {[type]} slotSize [description]
+       * @return {[type]}          [description]
+       */
+  		changeSlotSize: function changeSlotSize(assetId, slotSize) {
+  			assetId = assetId.trim();
   			var scheduleRef = $firebase(reservationsRef.child("schedules/"+assetId));
 	  		return ReservationService.cleanSchedule(scheduleRef, slotSize, true);
   		},
   		bookings: function getBookings(assetId, unit, custom_year, custom_week, custom_day) {
+  			assetId = assetId.trim();
   			var year = custom_year || moment().get('year');
   			var week = custom_week || moment().get('week');
   			var day  = custom_day  || moment().dayOfYear();
@@ -93,44 +152,61 @@ angular.module('hyenaReservationsApp')
 
   			return bookingRef.$set(hour, true);
   		},
-  		compareAvailability: function compareAvailability(assets)
+      normalizeArrays: function normalizeArrays(arrays, slotSize)
+      {
+        slotSize = slotSize || 60; //Slot size to convert all arrays to
+        var numHours = minutesInDay/slotSize;
+
+        for (var i = 0; i < arrays.length; i++) { //Each Asset
+          // arrays[i].resize([7, numHours], 1);
+          // arrays[i] = arrays[i].valueOf();
+
+          for (var j = 0; j < arrays[i].length; j++) { //Each Day
+            var interpolateFactor = numHours/arrays[i][j].length;
+            var tempArray = [];
+            for (var k = 0; k < arrays[i][j].length; k++) { //Each Slot
+              for (var f = 0; f < interpolateFactor; f++) {
+                tempArray.push(arrays[i][j][k]);
+              }
+            }
+            arrays[i][j] = tempArray;
+          }
+        }
+        return arrays;
+      },
+  		compareAvailability: function compareAvailability(promises, slotSize)
   		{
-  			if(angular.isUndefined(assets))
-  				return false;
-
-  			//Debug
-  			console.log("Asset Array", assets);
-
   			var assetRefs = [];
-  			for (var i = 0; i < assets.length; i++) {
-  				ReservationService.schedule(assets[i]).$asArray().$loaded(function(data) {
-  					console.log('Array Loaded', data);
-					var tempArray = [];
+  			for (var i = 0; i < promises.length; i++) {
+  				var tempArray = [];
 
-						//Loop through arrays and convert bool to int
-	  				for (var k = 0; k < data.length; k++) {
-	  					for (var j = 0; j < data[k].length; j++) {
-	  						data[k][j] = data[k][j] ? 1 : 0;
-	  					}
-	  				}
-	  				//Push the modified array to array of assets
-	  				assetRefs.push(data);
+  				//Loop through arrays and convert bool to int
+  				for (var k = 0; k < promises[i].length; k++) {
+  					for (var j = 0; j < promises[i][k].length; j++) {
+  						promises[i][k][j] = promises[i][k][j] ? 1 : 0;
+  					}
+  				}
+  				//Push the modified array to array of promises
+          //promises[i] = math.matrix(promises[i]);
+  				assetRefs.push(promises[i]);
+  			}
 
-	  				console.log('tempArray', data);
-	  				if((assets.length) === i)
-	  					doCompare();
-  				});
-  			}
-  			//lls_402, -JfeEYTIi-8PSHVXOUgx
-  			return function doCompare() {
-  				//Do array math and return final array
-				console.log('End');
-				console.log('Final Arrays', assetRefs);
-	  			if(angular.isDefined(assetRefs)) {
-	  				var combinedArray = math.add(assetRefs[0], assetRefs[1]);
-	  				return combinedArray;
-	  			}
-  			}
+        //Normalize arrays to have same dimensions so the arrays can be added correctly
+        assetRefs = ReservationService.normalizeArrays(assetRefs, slotSize);     
+
+  			//Make sure arrays were created and do math
+  			if(angular.isDefined(assetRefs)) {
+  				var combinedArray = math.zeros([7, assetRefs[0][0].length]);
+
+  				for (i = 0; i < assetRefs.length; i++) {
+  					combinedArray = math.add(combinedArray, assetRefs[i]);
+  				}
+
+    				return combinedArray;
+    		}
+
+    		return false;
+    		//lls_402,-JfeEYTIi-8PSHVXOUgx
   		}
   	};
 

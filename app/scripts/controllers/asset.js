@@ -27,7 +27,7 @@ angular.module('hyenaReservationsApp')
   	var bookings = ReservationService.bookings(assetId).$asObject();
   	bookings.$bindTo($scope, 'bookings');
 
-  	$scope.addBooking = function(assetId, day, hour) {
+  	$scope.addBooking = function(day, hour) {
    		console.log('Adding Booking', day, hour, assetId);
    		var bookingResponse = ReservationService.book(assetId, day, hour);
    		bookingResponse.then(function(response) {

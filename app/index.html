@@ -26,8 +26,11 @@
     <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
     <!-- endbuild -->
 
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/unl-style/dist/unl-style.css" shim-shadowdom/>
+    <!-- endbower -->
+
     <!-- UNL Components -->
-    <link rel="import" href="elements/unl-style/unl-style.html">
     <link rel="import" href="elements/unl-header/unl-header.html">
     <link rel="import" href="elements/unl-layout/unl-layout.html">
     <link rel="import" href="elements/unl-toolbar/unl-toolbar.html">
@@ -47,8 +50,6 @@
 
     <!-- build:css(.) styles/vendor.css -->
     <link rel="stylesheet" type="text/css" href="styles/main.css">
-    <!-- bower:css -->
-    <!-- endbower -->
     <!-- endbuild -->
   </head>
   <body ng-controller="ApplicationCtrl" ng-show="appLoaded" unresolved>

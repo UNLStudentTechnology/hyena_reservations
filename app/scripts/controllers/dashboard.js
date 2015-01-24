@@ -18,6 +18,7 @@ angular.module('hyenaReservationsApp')
     if(angular.isDefined(groupId))
       GroupService.existsOrAdd(groupId);
 
-  	//Get Assets
-  	$scope.assets = ReservationService.assets(groupId, 10).$asArray();
+    //Get Assets
+    if(groupId)
+      $scope.assets = ReservationService.groupAssets(groupId, 10).$asArray();
   });

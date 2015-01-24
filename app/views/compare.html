@@ -4,6 +4,15 @@
   	<span flex class="align-center">Compare Assets</span>
 </unl-toolbar>
 <div class="content-container">
-	<input type="text" ng-model="assets" ng-blur="compareAssets()">
-	<p>{{ compareOutput }}</p>
+  <unl-list-group>
+    <unl-list-item-label ng-repeat="asset in assets | orderBy:'title'" heading="{{asset.title}}" link>
+      <a ng-click="addAsset(asset.$id)"><paper-ripple fit></paper-ripple></a>
+    </unl-list-item-label>
+    <unl-list-item>
+    	<input type="text" ng-model="asset_list" ng-blur="compareAssets()" placeholder="Asset IDs">
+    </unl-list-item>
+  </unl-list-group>
+</div>
+<div class="content-container">
+	<booking-calendar ng-show="asset_list.length > 0" asset="asset" type="compare" bookings="bookings" schedule="schedule" on-change="addBooking"></booking-calendar>
 </div>

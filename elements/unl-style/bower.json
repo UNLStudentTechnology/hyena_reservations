@@ -1,0 +1,26 @@
+{
+  "name": "unl-style",
+  "version": "0.1.0",
+  "homepage": "https://github.com/UNLStudentTechnology/",
+  "authors": [
+    "Hayden Gascoigne <haydengascoigne@gmail.com>"
+  ],
+  "description": "Styles for UNL's Polymer based webapps.",
+  "main": "unl-style.html",
+  "keywords": [
+    "unl",
+    "style",
+    "polymer",
+    "student",
+    "technology",
+    "hyena"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
