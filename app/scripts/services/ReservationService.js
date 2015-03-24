@@ -65,10 +65,20 @@ angular.module('hyenaReservationsApp')
           return response;
         });
   		},
+      /**
+       * Remove an asset from Firebase
+       * @param  string assetId
+       * @return Promise
+       */
   		remove: function removeAsset(assetId) {
   			assetId = assetId.trim();
   			return $firebase(reservationsRef.child('/assets/'+assetId)).$remove();
   		},
+      /**
+       * Get a schedule for an asset
+       * @param  string assetId
+       * @return Promise
+       */
   		schedule: function getSchedule(assetId) {
   			assetId = assetId.trim();
   			if(assetId === "")

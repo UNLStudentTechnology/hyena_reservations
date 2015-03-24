@@ -1,4 +1,4 @@
-// Generated on 2014-10-24 using generator-angular 0.9.8
+// Generated on 2015-02-16 using generator-hyena 0.10.0
 'use strict';
 
 // # Globbing
@@ -46,10 +46,6 @@ module.exports = function (grunt) {
         files: ['test/spec/{,*/}*.js'],
         tasks: ['newer:jshint:test', 'karma']
       },
-      lessfiles: {
-        files: ['<%= yeoman.app %>/styles/less/{,*/}*.less'],
-        tasks: ['less']
-      },
       styles: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
         tasks: ['newer:copy:styles', 'autoprefixer']
@@ -64,8 +60,7 @@ module.exports = function (grunt) {
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-          '<%= yeoman.app %>/elements/{,*/}*.{html,css}',
+          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
     },
@@ -138,24 +133,24 @@ module.exports = function (grunt) {
       dist: {
         options: {
           open: true,
-          base: '<%= yeoman.dist %>'
+          base: ''
         }
       }
     },
 
     // Compile LESS files
     less: {
-      development: {
-        options: {
-          compress: true,
-          yuicompress: true,
-          optimization: 2
-        },
-        files: {
-          // target.css file: source.less file
-          "<%= yeoman.app %>/styles/main.css": "<%= yeoman.app %>/styles/less/main.less"
+        development: {
+            options: {
+                compress: true,
+                yuicompress: true,
+                optimization: 2
+            },
+            files: {
+                // target.css file: source.less file
+                'app/styles/unl-style.css': 'app/styles/less/main.less'
+            }
         }
-      }
     },
 
     // Make sure code styles are up to par and there are no obvious mistakes
@@ -186,7 +181,7 @@ module.exports = function (grunt) {
           src: [
             '.tmp',
             '<%= yeoman.dist %>/{,*/}*',
-            '!<%= yeoman.dist %>/.git*'
+            '!<%= yeoman.dist %>/.git{,*/}*'
           ]
         }]
       },
@@ -252,7 +247,15 @@ module.exports = function (grunt) {
       html: ['<%= yeoman.dist %>/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       options: {
-        assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images']
+        assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images'],
+        blockReplacements: {
+          css: function (block) {
+            return '<link rel="stylesheet" href="' + block.dest + '" shim-shadowdom>';
+          },
+          elements: function (block) {
+            return '<link rel="import" href="' + block.dest + '">';
+          }
+        }
       }
     },
 
@@ -356,18 +359,18 @@ module.exports = function (grunt) {
             '*.html',
             'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'fonts/*',
+            'fonts/{,*/}*.*'
           ]
+        }, {
+          expand: true, 
+          cwd: './bower_components/unl-components',
+          dest: '<%= yeoman.dist %>/elements/unl-components/',
+          src: ['**', '!**/node_modules/**'], 
         }, {
           expand: true,
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/images',
           src: ['generated/*']
-        }, {
-          expand: true, 
-          cwd: './',
-          dest: '<%= yeoman.dist %>',
-          src: ['elements/**', '!**/node_modules/**', '!**/bower_components/**'], 
         }]
       },
       styles: {

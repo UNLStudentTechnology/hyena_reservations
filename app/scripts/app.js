@@ -13,44 +13,60 @@ angular
     'ngAnimate',
     'ngCookies',
     'ngResource',
-    'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ngStorage',
-    'firebase',
-    'angularMoment',
+    'ui.router',
+    'hyenaAngular',
     'ui.mask'
   ])
-  .config(function ($routeProvider, $locationProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'DashboardCtrl'
+  .config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
+    $stateProvider
+      //Layouts
+      .state('unl-layout', {
+        templateUrl: 'views/layouts/unl-layout.html',
+        data: {
+          requireAuth: true
+        }
       })
-      .when('/compare', {
+      .state('unl-layout-kiosk', {
+        templateUrl: 'views/layouts/unl-layout-kiosk.html',
+        data: {
+          requireAuth: false
+        }
+      })
+      //Views
+      .state('unl-layout.compare', {
+        url: '/compare',
         templateUrl: 'views/compare.html',
         controller: 'CompareCtrl'
       })
-      .when('/:groupId', {
+      .state('unl-layout.main', {
+        url: '/:groupId',
         templateUrl: 'views/main.html',
         controller: 'DashboardCtrl'
       })
-      .when('/:groupId/asset/new', {
+      .state('unl-lyaout.new', {
+        url: '/:groupId/asset/new',
         templateUrl: 'views/new.html',
         controller: 'NewCtrl'
       })
-      .when('/:groupId/asset/:assetId/settings', {
+      .state('unl-layout.asset_settings', {
+        url: '/:groupId/asset/:assetId/settings',
         templateUrl: 'views/asset_settings.html',
         controller: 'AssetSettingsCtrl'
       })
-      .when('/:groupId/asset/:assetId', {
+      .state('unl-layout.asset', {
+        url: '/:groupId/asset/:assetId',
         templateUrl: 'views/asset.html',
         controller: 'AssetCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
-    $locationProvider.html5Mode(true);
+      
+      //Default Route
+      $urlRouterProvider.otherwise("/");
+      //End Default Route
+      
+      //Remove # from URLs
+      $locationProvider.html5Mode(true);
   })
   .config(function ($httpProvider) {
     //$httpProvider.defaults.withCredentials = true;
@@ -65,20 +81,4 @@ angular
   .constant('APIKEY', 'MTAxMDI2YWJhN2NhZDk0MWE3Mzg1YjA5')
   .constant('APIPATH', 'http://st-studio.unl.edu/hyena_platform/public/api/1.0/')
   .constant('PLATFORM_ROOT', 'http://st-studio.unl.edu/hyena_platform/public/')
-  .constant('angularMomentConfig', {
-    //timezone: 'America/Chicago'
-  })
-  .constant('AUTH_EVENTS', {
-    loginSuccess: 'auth-login-success',
-    loginFailed: 'auth-login-failed',
-    logoutSuccess: 'auth-logout-success',
-    sessionTimeout: 'auth-session-timeout',
-    notAuthenticated: 'auth-not-authenticated',
-    notAuthorized: 'auth-not-authorized'
-  })
-  .constant('USER_ROLES', {
-    all: '*',
-    admin: 'admin',
-    editor: 'editor',
-    guest: 'guest'
-  });
+  .constant('AUTH_SCOPE', 'groups');

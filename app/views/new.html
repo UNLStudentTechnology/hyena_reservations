@@ -1,5 +1,4 @@
 <unl-toolbar>
-  	<unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
 	<a ng-click="go('/{{groupId}}', 'animate-slide-left')" title="Back to Assets"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
   	<span flex class="align-center">{{asset.title || 'New Asset'}}</span>
   	<a ng-href="{{asset.url}}" ng-show="asset.url" title="Open asset" target="_blank"><unl-icon-button icon="launch"></unl-icon-button></a>

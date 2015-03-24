@@ -8,12 +8,12 @@
  * Controller of the hyenaReservationsApp
  */
 angular.module('hyenaReservationsApp')
-  .controller('AssetCtrl', function ($scope, $rootScope, $routeParams, ReservationService, Notification) {
+  .controller('AssetCtrl', function ($scope, $rootScope, $stateParams, ReservationService, Notification) {
   	//Get and set the current group ID
-  	var groupId = $routeParams.groupId;
+  	var groupId = $stateParams.groupId;
   	$scope.groupId = $rootScope.currentGroupId = groupId;
   	//Get asset id
-  	var assetId = $scope.assetId = $routeParams.assetId;
+  	var assetId = $scope.assetId = $stateParams.assetId;
 
   	//Get Asset
   	var asset = ReservationService.asset(assetId).$asObject();
