@@ -15,6 +15,8 @@ angular.module('hyenaReservationsApp')
   	//Get asset id
   	var assetId = $scope.assetId = $stateParams.assetId;
 
+    $scope.selectedTab = 0;
+
   	//Get Asset
   	var asset = ReservationService.asset(assetId).$asObject();
   	asset.$bindTo($scope, 'asset');

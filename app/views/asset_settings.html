@@ -1,5 +1,4 @@
 <unl-toolbar>
-  <unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
   <a ng-click="go('/{{groupId}}/asset/{{assetId}}', 'animate-slide-left')" title="Back to Asset"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
   <span flex class="align-center">{{ asset.title || 'Loading' }}</span>
 </unl-toolbar>
@@ -28,9 +27,9 @@
 				</div>
 			</unl-list-item-details>
 			<unl-list-item-header>Display</unl-list-item-header>
-			<unl-list-item-details heading="Hide Weekends">
+			<unl-list-item-details heading="Weekends">
 				<div class="tools">
-					<unl-toggle-button id="hide-weekends" value="{{asset.hide_weekend}}" bind-polymer></unl-toggle-button>
+					<unl-toggle-button id="weekends" value="{{asset.weekend}}" bind-polymer></unl-toggle-button>
 				</div>
 			</unl-list-item-details>
 			<unl-list-item-details heading="Hide Time Slots Before">
@@ -44,6 +43,8 @@
 				</div>
 			</unl-list-item-details>
 		</unl-list-group>
-		<button type="button" ng-click="removeAsset()" class="button-error">Delete Asset</button>
+		<button type="button" ng-click="confirmRemoveAsset()" class="button-error">Delete Asset</button>
 	</form>
 </div>
+<!-- Modals -->
+<div id="modal-asset-remove" hidden ng-include src="'views/partials/modal-remove-asset.html'"></div>

@@ -8,9 +8,9 @@
  * Controller of the hyenaReservationsApp
  */
 angular.module('hyenaReservationsApp')
-  .controller('NewCtrl', function ($scope, $routeParams, $rootScope, Notification, ReservationService) {
+  .controller('NewCtrl', function ($scope, $stateParams, $rootScope, Notification, ReservationService) {
   	//Get the selected group from the route parameters and set it in the scope
-    var groupId = $routeParams.groupId;
+    var groupId = $stateParams.groupId;
     $scope.groupId = $rootScope.currentGroupId = groupId;
 
     //Default asset settings

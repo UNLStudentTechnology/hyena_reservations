@@ -45,20 +45,20 @@ angular
         templateUrl: 'views/main.html',
         controller: 'DashboardCtrl'
       })
-      .state('unl-lyaout.new', {
+      .state('unl-layout.new', {
         url: '/:groupId/asset/new',
         templateUrl: 'views/new.html',
         controller: 'NewCtrl'
-      })
-      .state('unl-layout.asset_settings', {
-        url: '/:groupId/asset/:assetId/settings',
-        templateUrl: 'views/asset_settings.html',
-        controller: 'AssetSettingsCtrl'
       })
       .state('unl-layout.asset', {
         url: '/:groupId/asset/:assetId',
         templateUrl: 'views/asset.html',
         controller: 'AssetCtrl'
+      })
+      .state('unl-layout.asset_settings', {
+        url: '/:groupId/asset/:assetId/settings',
+        templateUrl: 'views/asset_settings.html',
+        controller: 'AssetSettingsCtrl'
       });
       
       //Default Route

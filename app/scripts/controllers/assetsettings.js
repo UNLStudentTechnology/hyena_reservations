@@ -26,6 +26,10 @@ angular.module('hyenaReservationsApp')
       }
     });
 
+    $scope.confirmRemoveAsset = function() {
+      Notification.showModal('Remove Asset', '#modal-asset-remove');
+    };
+
     /**
      * Removes the asset from the database
      */

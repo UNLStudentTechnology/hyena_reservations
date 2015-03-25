@@ -40,11 +40,18 @@ booking-calendar {
 	background: @subtle;
 	margin: 5px;
 
+	&:hover {
+		background: darken(@subtle, 10%);
+	}
+
+	&.panel-success:hover {
+		background-color: darken(@success, 10%) !important;
+	}
+
 	& input {
 		display: none;
 	}
 
-	& input:checked ~ label,
 	& input[disabled] ~ label {
 		cursor: not-allowed;
 	}

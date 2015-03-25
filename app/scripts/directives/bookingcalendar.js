@@ -1,4 +1,5 @@
 /* global moment */
+/* global math */
 'use strict';
 
 /**
@@ -16,10 +17,17 @@ angular.module('hyenaReservationsApp')
       	asset: '=',
       	schedule: '=',
       	bookings: '=',
+        type: '=',
       	addBooking: '&onChange'
       },
       replace: false,
       link: function postLink(scope, element, attrs) {
+        if(angular.isDefined(attrs.type)) {
+          console.log(attrs.type);
+          scope.typeAvailability = (attrs.type == "availability");
+          scope.type = attrs.type;
+          console.log(scope.typeAvailability);   
+        }
       	/**
       	 * CHecks the current date and sets how many future days to show.
       	 */
@@ -49,7 +57,7 @@ angular.module('hyenaReservationsApp')
       	 * @param  int hour Hour of day
       	 */
       	scope.doBooking = function(day, hour) {
-      		scope.addBooking()(day, hour);
+          scope.addBooking()(day, scope.convertKeyToNum(hour));
       	};
 
        	/**
@@ -65,7 +73,7 @@ angular.module('hyenaReservationsApp')
     		/**
     		 * Converts the hour value stored on Firebase to minutes and returns a moment formated time
     		 * @param  int value Hour (0 to 23)
-    		 * @return int       [description]
+    		 * @return int       Minutes into day
     		 */
     		scope.hourToMinutes = function(value) {
     			value = value*60;
@@ -73,13 +81,17 @@ angular.module('hyenaReservationsApp')
     		};
     		/**
     		 * Converts from minutes to hours
-    		 * @param  int value [description]
+    		 * @param  int value Minutes
     		 * @return int       Hour Value
     		 */
     		scope.minutesToHour = function(value) {
     			return value/60;
     		};
-
+        /**
+         * Converts array key for hour slot to actual hour value
+         * @param  int value key to convert
+         * @return int       hour in day (in decimal form) Ex. 1:30pm would be represented by 13.5
+         */
     		scope.convertKeyToNum = function(value) {
     			return (scope.asset.slot_size/60)*value;
     		};

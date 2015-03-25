@@ -10,9 +10,10 @@
  * Service in the hyenaReservationsApp.
  */
 angular.module('hyenaReservationsApp')
-  .service('ReservationService', function ($firebase, AppFirebase, $q) {
+  .service('ReservationService', function ($firebase, $q, AppFirebase) {
   	var reservationsRef = AppFirebase.getRef();
     var minutesInDay = 1440;
+    var baseSlotSize = 5; //in minutes
     
   	var ReservationService = {
       /**
@@ -72,6 +73,8 @@ angular.module('hyenaReservationsApp')
        */
   		remove: function removeAsset(assetId) {
   			assetId = assetId.trim();
+        $firebase(reservationsRef.child('/bookings/'+assetId)).$remove();
+        $firebase(reservationsRef.child('/schedules/'+assetId)).$remove();
   			return $firebase(reservationsRef.child('/assets/'+assetId)).$remove();
   		},
       /**
@@ -94,8 +97,8 @@ angular.module('hyenaReservationsApp')
   		},
       /**
        * Internal function that maintains proper state of schedules
-       * @param  firebase schedule     Firebase Reference to asset's schedule
-       * @param  int      slotSize     Asset slot size
+       * @param  firebase schedule      Firebase Reference to asset's schedule
+       * @param  int      slotSize      Asset slot size
        * @param  bool     wipeExisting  Forces rebuild of asset's schedule
        * @return bool
        */
@@ -105,7 +108,7 @@ angular.module('hyenaReservationsApp')
   			var scheduleObject = schedule.$asObject();
   			var numHours = minutesInDay/slotSize;
 
-        //Check integrity and build schedule
+        //Check integrity and build schedule after it has been loaded
   			scheduleObject.$loaded().then(function(data) {
 	  			for (var i = 0; i < 7; i++) { //Loop through days
 	  				if(wipeExisting || angular.isUndefined(data[i]))
@@ -116,7 +119,7 @@ angular.module('hyenaReservationsApp')
 
 	  					var hourIndex = 0;
 	  					for (var j = 0; j < numHours; j++) { //Loop through hours
-	  						newObj[j] = true;
+	  						newObj[j] = true; //Sets default to unavailable
 	  					}
 
 	  					schedule.$set(i, newObj);

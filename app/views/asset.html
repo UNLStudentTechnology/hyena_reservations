@@ -1,9 +1,22 @@
-<unl-toolbar>
-  <unl-drawer-toggle ng-click="toggleMainDrawer()"></unl-drawer-toggle>
+<unl-toolbar tabs>
   <a ng-click="go('/{{groupId}}', 'animate-slide-left')" title="Back to Assets"><unl-icon-button icon="arrow-back"></unl-icon-button></a>
   <span flex class="align-center">{{ asset.title || 'Loading' }}</span>
-  <a ng-click="go('/{{groupId}}/asset/{{assetId}}/settings')" title="Settings"><unl-icon-button icon="settings"></unl-icon-button></a>
+  <unl-tooltip position="left" label="Enter Kiosk Mode"><a ng-click="go('/{{groupId}}/asset/{{assetId}}/kiosk')" title="Enter Kiosk Mode"><unl-icon-button icon="fullscreen"></unl-icon-button></a></unl-tooltip>
+  <unl-tooltip position="left" label="Settings"><a ng-click="go('/{{groupId}}/asset/{{assetId}}/settings')" title="Settings"><unl-icon-button icon="settings"></unl-icon-button></a></unl-tooltip>
 </unl-toolbar>
-<div class="content-container">
-	<booking-calendar asset="asset" bookings="bookings" schedule="schedule" on-change="addBooking"></booking-calendar>
-</div>
+<unl-tabs bind-polymer item="{{selectedTab}}">
+	<unl-tab>Availability</unl-tab>
+	<unl-tab>Schedule</unl-tab>
+</unl-tabs>
+<unl-pages item="{{selectedTab}}" flex>
+	<unl-panel>
+		<div class="content-container">
+			<booking-calendar asset="asset" bookings="bookings" schedule="schedule" on-change="addBooking" type="booking"></booking-calendar>
+		</div>
+	</unl-panel>
+	<unl-panel>
+		<div class="content-container">
+			<booking-calendar asset="asset" schedule="schedule" type="availability"></booking-calendar>
+		</div>
+	</unl-panel>
+</unl-pages>
